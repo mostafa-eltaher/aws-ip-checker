@@ -33,19 +33,7 @@ type IpRange struct {
 
 func main() {
 	const ipRangeLink string = "https://ip-ranges.amazonaws.com/ip-ranges.json"
-	fmt.Println("Downloading the ip range json file ...")
-	resp, err := http.Get(ipRangeLink)
-	if err != nil {
-		panic("Could not download the aws ip-ranges.json file!")
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic("Could not parse the aws ip-ranges.json file!")
-	}
-	var ipRangeJSON IpRange
-	json.Unmarshal([]byte(body), &ipRangeJSON)
-	fmt.Printf("Found %d IP ranges (including duplicates)\n", len(ipRangeJSON.Prefixes))
+	var err error
 	if len(os.Args) < 2 {
 		fmt.Printf("usage: %s [<ip_addr> | - <domain_name>] \n", os.Args[0])
 		return
@@ -68,6 +56,19 @@ func main() {
 		parsedIPs = make([]net.IP, 1)
 		parsedIPs[0] = net.ParseIP(argIP)
 	}
+	fmt.Println("Downloading the ip range json file ...")
+	resp, err := http.Get(ipRangeLink)
+	if err != nil {
+		panic("Could not download the aws ip-ranges.json file!")
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic("Could not parse the aws ip-ranges.json file!")
+	}
+	var ipRangeJSON IpRange
+	json.Unmarshal([]byte(body), &ipRangeJSON)
+	fmt.Printf("Found %d IP ranges (including duplicates)\n", len(ipRangeJSON.Prefixes))
 	var found uint = 0
 	for _, prefix := range ipRangeJSON.Prefixes {
 		_, ipnet, err := net.ParseCIDR(prefix.IpPrefix)
