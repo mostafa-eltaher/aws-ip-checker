@@ -26,7 +26,7 @@ $(DISTDIR)/$(BINNAME)_$(VERSION)_%.tar.gz: $(BINDIR)/$(VERSION)/%/$(BINNAME) | $
 	tar -zcf $@ -C $(^D) .
 
 $(BINDIR)/$(VERSION)/%/$(BINNAME) $(BINDIR)/$(VERSION)/%/$(BINNAME).exe: $(SRC)
-	GOOS=$(call get_os,$(*F)) GOARCH=$(call get_arch,$(*F)) go build -o $@ ./cmd/$(CMDNAME)
+	GOOS=$(call get_os,$(*F)) GOARCH=$(call get_arch,$(*F)) go build -o $@ ./cmd
 
 $(DISTDIR):
 	mkdir -p $@
