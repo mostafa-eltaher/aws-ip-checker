@@ -1,4 +1,3 @@
-TEST?        = $$(go list ./... | grep -v 'vendor')
 SRC          = $(wildcard */*.go) $(wildcard */*/*.go)
 CMDNAME      = aws-ip-checker
 BINNAME       = $(CMDNAME)
@@ -44,11 +43,6 @@ build: $(BINDIR)/$(VERSION)/$(OS_ARCH)/$(BINNAME).exe
 else
 build: $(BINDIR)/$(VERSION)/$(OS_ARCH)/$(BINNAME)
 endif
-
-.PHONY: test
-test:
-	go test -i $(TEST) || exit 1
-	echo $(TEST) | xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4
 
 .PHONY: clean
 clean:
